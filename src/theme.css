@@ -1,0 +1,150 @@
+/* ---------------------------------------------------------------
+   theme.css — the whole colour system, both modes, in one place.
+
+   Rule from here on: no component ever writes a hex value.
+   If you catch yourself typing bg-[#...] in a component, the colour
+   is missing from this file. Add it here first.
+   --------------------------------------------------------------- */
+
+/* ============ LIGHT (default) ============ */
+:root {
+  --font-size: 16px;
+  --radius: 1.25rem;
+
+  /* Tells the browser to style NATIVE UI to match — scrollbars, autofill
+     backgrounds, iOS form controls. Without it, dark mode gets white
+     autofill boxes over your inputs and no CSS of yours can fix it. */
+  color-scheme: light;
+
+  /* Surfaces, from furthest back to closest to the user */
+  --background:      #f4f3ea;  /* the page itself */
+  --surface:         #ffffff;  /* cards sitting on the page */
+  --surface-2:       #edebe0;  /* wells INSIDE cards — inputs, nested rows */
+  --surface-raised:  #ffffff;  /* sheets and popovers floating above */
+  --surface-nav:     #fbfaf4;  /* bottom nav bar */
+
+  /* Text, from loudest to quietest */
+  --foreground:        #15170e;  /* headings, numbers */
+  --foreground-subtle: #43473c;  /* secondary text, icon buttons */
+  --foreground-muted:  #6b6f62;  /* labels, captions, metadata */
+
+  /* Lines and washes. Opacity-based so they sit on any surface. */
+  --border:        rgba(21, 23, 14, 0.10);
+  --border-strong: rgba(21, 23, 14, 0.17);
+  --hover:         rgba(21, 23, 14, 0.04);
+  --track:         rgba(21, 23, 14, 0.09);  /* empty part of progress bars */
+  --scrim:         rgba(21, 23, 14, 0.45);  /* behind modal sheets */
+
+  /* Brand.
+     -fill is for backgrounds (dark text sits on it).
+     -ink  is for coloured TEXT and icons.
+     They differ because lime text on white is unreadable — this split
+     is the single most important idea in this file. */
+  --primary:            #d6f45a;
+  --primary-foreground: #15170e;
+  --primary-ink:        #5d6f10;
+  --primary-wash:       rgba(147, 176, 20, 0.14);  /* tinted callout backgrounds */
+
+  /* Macros. Same fill/ink split, same reason. */
+  --protein-fill: #c3e134;  --protein-ink: #5d6f10;
+  --carbs-fill:   #e9b445;  --carbs-ink:   #8a6210;
+  --fat-fill:     #e0714a;  --fat-ink:     #a63f1e;
+  --fiber-fill:   #6fb3a6;  --fiber-ink:   #2b6a5d;
+
+  --destructive:            #cf4636;
+  --destructive-foreground: #ffffff;
+}
+
+/* ============ DARK ============ */
+/* Only the values change. Every name above still exists, so no
+   component needs to know which mode it's in. */
+.dark {
+  color-scheme: dark;
+
+  --background:      #10110e;
+  --surface:         #1a1c18;
+  --surface-2:       #171914;
+  --surface-raised:  #21231f;
+  --surface-nav:     #151712;
+
+  --foreground:        #f5f4eb;
+  --foreground-subtle: #d2d4ca;
+  --foreground-muted:  #9da094;
+
+  --border:        rgba(245, 244, 235, 0.12);
+  --border-strong: rgba(245, 244, 235, 0.17);
+  --hover:         rgba(245, 244, 235, 0.05);
+  --track:         rgba(245, 244, 235, 0.11);
+  --scrim:         rgba(0, 0, 0, 0.55);
+
+  --primary:            #d6f45a;
+  --primary-foreground: #15170e;
+  --primary-ink:        #d6f45a;  /* on near-black, the lime reads fine as-is */
+  --primary-wash:       rgba(214, 244, 90, 0.10);
+
+  --protein-fill: #d6f45a;  --protein-ink: #d6f45a;
+  --carbs-fill:   #f2c25f;  --carbs-ink:   #f2c25f;
+  --fat-fill:     #ea825a;  --fat-ink:     #ea825a;
+  --fiber-fill:   #8fc9be;  --fiber-ink:   #8fc9be;
+
+  --destructive:            #ed6b5d;
+  --destructive-foreground: #ffffff;
+}
+
+/* ============ EXPOSE TO TAILWIND ============ */
+/* Tailwind v4 reads this block and generates utilities from it.
+   --color-surface here is what makes `bg-surface` a real class. */
+@theme inline {
+  --color-background:     var(--background);
+  --color-surface:        var(--surface);
+  --color-surface-2:      var(--surface-2);
+  --color-surface-raised: var(--surface-raised);
+  --color-surface-nav:    var(--surface-nav);
+
+  --color-foreground:        var(--foreground);
+  --color-foreground-subtle: var(--foreground-subtle);
+  --color-foreground-muted:  var(--foreground-muted);
+
+  --color-border:        var(--border);
+  --color-border-strong: var(--border-strong);
+  --color-hover:         var(--hover);
+  --color-track:         var(--track);
+  --color-scrim:         var(--scrim);
+
+  --color-primary:            var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary-ink:        var(--primary-ink);
+  --color-primary-wash:       var(--primary-wash);
+
+  --color-protein-fill: var(--protein-fill);  --color-protein-ink: var(--protein-ink);
+  --color-carbs-fill:   var(--carbs-fill);    --color-carbs-ink:   var(--carbs-ink);
+  --color-fat-fill:     var(--fat-fill);      --color-fat-ink:     var(--fat-ink);
+  --color-fiber-fill:   var(--fiber-fill);    --color-fiber-ink:   var(--fiber-ink);
+
+  --color-destructive:            var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+
+  --radius-sm: calc(var(--radius) - 8px);
+  --radius-md: calc(var(--radius) - 4px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 8px);
+
+  --font-display: 'Fraunces', Georgia, serif;
+  --font-sans:    'DM Sans', system-ui, sans-serif;
+  --font-mono:    'DM Mono', ui-monospace, monospace;
+}
+
+@layer base {
+  html { font-size: var(--font-size); }
+
+  body {
+    background: var(--background);
+    color: var(--foreground);
+    font-family: var(--font-sans);
+    /* Stops iOS from tinting your greens when the phone flips to dark. */
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* Kills the grey flash when you tap a button on iOS. */
+  * { -webkit-tap-highlight-color: transparent; }
+}
