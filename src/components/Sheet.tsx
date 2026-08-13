@@ -18,7 +18,7 @@ export function Sheet({
 
         function close() {
             if (location.key !== 'default') navigate(-1)
-            else navigate(`/dat/${date}`, { replace: true})
+            else navigate(`/day/${date}`, { replace: true})
         }
 
   return (

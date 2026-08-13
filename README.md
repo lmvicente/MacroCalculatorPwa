@@ -34,4 +34,4 @@ npm run dev
 
 To use it on your phone, deploy `npm run build` output anywhere static —
 Netlify, Vercel, GitHub Pages. It has to be served over HTTPS; the
-service worker won't register otherwise, so it won't install.
+service worker won't register otherwise, so it won't install.f

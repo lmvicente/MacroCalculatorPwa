@@ -9,7 +9,7 @@ export function getStoredTheme(): Theme {
 }
 
 export function prefersDark(): boolean {
-    return window.matchMedia('(prefers-color-scheme: dark').matches
+    return window.matchMedia('(prefers-color-scheme: dark)').matches
 }
 
 export function resolveTheme(theme: Theme): 'light' | 'dark' {

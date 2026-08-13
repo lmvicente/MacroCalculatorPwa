@@ -16,7 +16,9 @@ export function BottomNav() {
     ]
 
     return (
-        <nav className="fixed inset-x-0 bottom-0 z-30 borter-t borter-border bg-surface-nav/95 px-5 pb-[max(1rem, env(safe-area-inset-bottom))] pt-3 backdrop-blur-xl md:absoluate md:bottom-4 md:left-1/2 md:w-[390px] md:-translate-x-1/2 md:rounded-[1.65rem] md:border">
+        <nav className="fixed inset-x-0 bottom-0 z-30 border-t border-border bg-surface-nav/95
+        px-5 pb-[max(1rem,env(safe-area-inset-bottom))] pt-3 backdrop-blur-xl
+        md:absolute md:bottom-4 md:left-1/2 md:w-[390px] md:-translate-x-1/2 md:rounded-[1.65rem] md:border">
             <div className='mx-auto flex max-w-[430px] justify-between'>
                 {items.map(({ to, label, icon: Icon, match }) => {
                 // startsWith, not exact — /day/2026-08-11/add still lights up Today.

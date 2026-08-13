@@ -5,7 +5,8 @@ export type DateKey = string // 'YYYY-MM-DD'
 // takes in the date and normalizes it into yyyy-mm-dd structure
 export function toDateKey(d: Date): DateKey {
     const y = d.getFullYear();
-    const m = String(d.getMonth()).padStart(2, '0') //pad 2 to get 01, 02, etc.
+    //zero-based so need to add + 1
+    const m = String(d.getMonth() + 1).padStart(2, '0') //pad 2 to get 01, 02, etc.
     const day = String(d.getDate()).padStart(2, '0') //pad 2 to get 04, etc.
 
     return `${y}-${m}-${day}`
