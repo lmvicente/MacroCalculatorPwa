@@ -6,6 +6,7 @@ import { GoalsPage } from './screens/GoalsPage'
 import { SettingsPage } from './screens/SettingsPage'
 import { TrendsPage } from './screens/TrendsPage'
 import { todayKey } from './lib/dates'
+import { NewFoodSheet } from './screens/NewFoodSheet'
 
 export const router = createBrowserRouter([
   {
@@ -24,7 +25,7 @@ export const router = createBrowserRouter([
       { path: 'food/:foodId', Component: FoodSheet },
     ],
   },
-  { path: '/trends', Component: TrendsPage },
+  { path: '/trends', Component: NewFoodSheet },
   { path: '/goals', Component: GoalsPage },
   { path: '/settings', Component: SettingsPage },
   { path: '*', loader: () => redirect(`/day/${todayKey()}`, 302) },
