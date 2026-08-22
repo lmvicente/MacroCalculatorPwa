@@ -11,7 +11,17 @@ export default defineConfig({
     VitePWA({
       devOptions: {
         enabled: true
-      }
+      },
+        manifest: {
+        name: 'macro',
+        short_name: 'macro',
+        display: 'standalone',
+        icons: [
+          { src: '192.png', sizes: '192x192', type: 'image/png' },
+          { src: '512.png', sizes: '512x512', type: 'image/png' },
+        ],
+  },
+      
     })
   
   ],
