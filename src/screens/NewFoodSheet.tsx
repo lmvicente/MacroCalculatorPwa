@@ -3,14 +3,20 @@ import { Sheet } from '../components/Sheet'
 import type { Food, Macros, Unit } from '../lib/types';
 import { FAMILY_OF, toBaseUnits, UNITS_BY_FAMILY } from '../lib/units';
 import { db } from '../lib/db';
+import { useDateParam } from '../lib/useDataParam'
+import { useNavigate } from 'react-router'
+
 
 export function NewFoodSheet() {
+
+    const navigate = useNavigate()
+    const date = useDateParam()
+
     const [name, setName] = useState('');
     const [brand, setBrand] = useState('');
     const [servingAmount, setServingAmount] = useState('');
     const [servingUnit, setServingUnit] = useState<Unit>('g'); //no unit family because we use the unit to derive the family
     const [countLabel, setCountLabel] = useState(''); //rendered only if it ssomething other than the predefined units
-
     //macros
     const [kcal, setKcal] = useState('');
     const [protein, setProtein] = useState('');
@@ -51,7 +57,7 @@ export function NewFoodSheet() {
 
         const id = await db.foods.add(foodObject)
         console.log('saved', id)
-         
+        navigate(`/day/${date}/add?food=${id}`, { replace: true })
     }
 
   const inputClass =

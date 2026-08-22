@@ -22,10 +22,11 @@ export const router = createBrowserRouter([
     // still visible behind them.
     children: [
       { path: 'add', Component: EntrySheet },
+      { path: 'add/new', Component: NewFoodSheet },
       { path: 'food/:foodId', Component: FoodSheet },
     ],
   },
-  { path: '/trends', Component: NewFoodSheet },
+  { path: '/trends', Component: TrendsPage },
   { path: '/goals', Component: GoalsPage },
   { path: '/settings', Component: SettingsPage },
   { path: '*', loader: () => redirect(`/day/${todayKey()}`, 302) },
