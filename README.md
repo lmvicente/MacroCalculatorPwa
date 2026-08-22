@@ -15,7 +15,7 @@ Because I don't want to pay Apple or Google to put it on their app stores lol.
 
 ## Setup
 
-**Just want to use it?** Open [the deployed site](url) on your phone,
+**Just want to use it?** Open [the deployed site](https://macro-calculator-pwa.vercel.app) on your phone,
 then add it to your home screen:
 
 - **iOS (Safari only):** Share → Add to Home Screen. Chrome on iOS
