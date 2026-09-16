@@ -1,9 +1,9 @@
-import { Link, Outlet, useNavigate } from 'react-router'
-import { ChevronLeft, ChevronRight, Plus } from 'lucide-react'
+import { Outlet, useNavigate } from 'react-router'
+import { ChevronLeft, ChevronRight } from 'lucide-react'
 import { BottomNav } from '../components/BottomNav'
 import { useDateParam } from '../lib/useDataParam'
 import { addDays, friendlyDay, isoWeek, monthDay } from '../lib/dates'
-import type { Entry } from '../lib/types'
+import type { Entry, Food } from '../lib/types'
 import { useLiveQuery } from 'dexie-react-hooks'
 import { db } from '../lib/db'
 
@@ -19,6 +19,8 @@ export function DayView() {
   //select all the records in the dexiedb
   //orderedd by entry time
   const dayEntries: Entry[] = useLiveQuery(() => db.entries.where('date').equals(date).toArray(), [date], [])
+
+  const foodNames: Food[] = useLiveQuery(() => db.foods.toArray(), [], []) as Food[]
 
   //get the entries calories and add it up
   //claude adjust it to a one-liner .. clearly i need to work on js lol
@@ -87,7 +89,8 @@ export function DayView() {
             <tr key={e.id} className="border-b border-border last:border-b-0">
               <td className="px-4 py-3 text-foreground">
                 {/* PORT FROM FIGMA / YOU WRITE: food name via e.foodId, or store it inline */}
-                Entry #{e.id}
+                {/* need to iterate through the foodName array and get the name */}
+                {foodNames.find((f) => f.id === e.foodId)?.name ?? 'Entry #' + e.id}
               </td>
               <td className="px-2 py-3 text-center text-foreground">{Math.round(e.kcal)}</td>
               <td className="px-2 py-3 text-center text-foreground-subtle">{Math.round(e.protein)}</td>
@@ -121,14 +124,6 @@ export function DayView() {
         )}
       </table>
     </div>
-
-      <Link
-        to={`/day/${date}/add`}
-        aria-label="Add an entry"
-        className="fixed bottom-[4.9rem] right-5 z-40 flex size-14 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-[0_12px_28px_rgba(147,176,20,0.28)] md:absolute md:bottom-7 md:right-7"
-      >
-        <Plus size={27} />
-      </Link>
 
       <BottomNav />
 
