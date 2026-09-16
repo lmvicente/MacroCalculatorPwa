@@ -7,6 +7,7 @@ import { SettingsPage } from './screens/SettingsPage'
 import { TrendsPage } from './screens/TrendsPage'
 import { todayKey } from './lib/dates'
 import { NewFoodSheet } from './screens/NewFoodSheet'
+import { WaterSheet } from './screens/WaterSheet'
 
 export const router = createBrowserRouter([
   {
@@ -23,6 +24,8 @@ export const router = createBrowserRouter([
     children: [
       { path: 'add', Component: EntrySheet },
       { path: 'add/new', Component: NewFoodSheet },
+      { path: 'entry/:entryId', Component: EntrySheet },
+      { path: 'water', Component: WaterSheet },
       { path: 'food/:foodId', Component: FoodSheet },
     ],
   },

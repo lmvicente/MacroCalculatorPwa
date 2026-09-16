@@ -1,5 +1,6 @@
 import type { ReactNode } from 'react'
 import { BottomNav } from '../components/BottomNav'
+import { AppShell } from '../components/AppShell'
 
 /** Shared chrome for Trends / Goals / Settings. */
 export function UtilityPage({
@@ -14,13 +15,13 @@ export function UtilityPage({
   children?: ReactNode
 }) {
   return (
-    <div className="mx-auto min-h-[100dvh] max-w-[560px] px-5 pb-28 pt-7 md:relative md:my-6 md:min-h-[820px] md:rounded-[2rem] md:border md:border-border md:bg-background">
-      <div className="flex items-start justify-between">
+    <AppShell>
+      <div className="flex items-start justify-between pt-1">
         <div>
           <p className="font-[family-name:var(--font-mono)] text-[10px] uppercase tracking-[0.16em] text-foreground-muted">
             {eyebrow}
           </p>
-          <h1 className="mt-2 font-[family-name:var(--font-display)] text-[36px] tracking-[-0.035em] text-foreground">
+          <h1 className="mt-2 font-[family-name:var(--font-display)] text-[36px] font-semibold tracking-[-0.035em] text-foreground">
             {title}
           </h1>
         </div>
@@ -28,8 +29,8 @@ export function UtilityPage({
           {icon}
         </div>
       </div>
-      <div className="mt-7">{children}</div>
+      <div className="card mt-7 rounded-[1.65rem] p-5">{children}</div>
       <BottomNav />
-    </div>
+    </AppShell>
   )
 }

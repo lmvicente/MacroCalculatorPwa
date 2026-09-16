@@ -22,19 +22,19 @@ export function BottomNav() {
 
     return (
         
-        <nav className="fixed inset-x-0 bottom-0 z-30 border-t border-border bg-surface-nav/95
-        px-5 pb-[max(1rem,env(safe-area-inset-bottom))] pt-3 backdrop-blur-xl
-        md:absolute md:bottom-4 md:left-1/2 md:w-[450px] md:-translate-x-1/2 md:rounded-[1.65rem] md:border">
-            <div className="mx-auto flex max-w-[450px] items-center">
+        <nav className="fixed inset-x-0 bottom-0 z-30 overflow-visible border-t border-border bg-surface-nav
+        px-3 pb-[max(1rem,env(safe-area-inset-bottom))] pt-3
+        md:absolute md:inset-x-5 md:bottom-4 md:rounded-[1.65rem] md:border md:pb-3 md:shadow-[var(--shadow-card)]">
+            <div className="flex items-center">
                 {left.map((item) => (
                     <TabLink key={item.label} pathname={pathname} {...item} />
                 ))}
                 <Link
                     to={addTo}
                     aria-label="Add an entry"
-                    className="-mt-5 flex size-18 shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-[0_12px_28px_rgba(147,176,20,0.28)]"
+                    className="z-10 -mt-7 mx-1 flex size-16 shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-[0_12px_28px_var(--primary-glow)]"
                 >
-                    <Plus size={32} />
+                    <Plus size={28} />
                 </Link>
                 {right.map((item) => (
                     <TabLink key={item.label} pathname={pathname} {...item} />
@@ -62,7 +62,7 @@ function TabLink({
     return (
         <NavLink
             to={to}
-            className={`flex min-w-0 flex-1 flex-col items-center gap-1 rounded-xl py-1.5 text-[11px] font-semibold tracking-[0.08em] transition ${
+            className={`flex min-w-0 flex-1 flex-col items-center gap-1 whitespace-nowrap rounded-xl py-1.5 text-[11px] font-semibold tracking-[0.08em] transition ${
                 active ? 'text-primary-ink' : 'text-foreground-muted'
             }`}
         >

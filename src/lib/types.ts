@@ -35,4 +35,14 @@ export interface Food extends Macros {
 export interface Target extends NullableMacros {
     id?: number;
     effectiveFrom: DateKey;
+    /** Daily water target in fluid ounces. */
+    water?: number | null;
+}
+
+export interface WaterLog {
+    id?: number;
+    date: DateKey;
+    loggedAt: number;
+    /** Amount added in this log, in fluid ounces. */
+    ounces: number;
 }

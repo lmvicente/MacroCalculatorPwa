@@ -9,8 +9,13 @@ export default defineConfig({
     react(),
     tailwindcss(),
     VitePWA({
+      registerType: 'autoUpdate',
+      injectRegister: false,
       devOptions: {
         enabled: true
+      }, 
+      workbox: {
+        globPatterns: ['**/*.{js,css,html,png,jpg,jpeg,gif,svg,webp}'],
       },
         manifest: {
         name: 'macro',
