@@ -1,5 +1,5 @@
-import { Link, Outlet, useNavigate } from 'react-router'
-import { ChevronLeft, ChevronRight, Plus } from 'lucide-react'
+import { Outlet, useNavigate } from 'react-router'
+import { ChevronLeft, ChevronRight } from 'lucide-react'
 import { BottomNav } from '../components/BottomNav'
 import { useDateParam } from '../lib/useDataParam'
 import { addDays, friendlyDay, isoWeek, monthDay } from '../lib/dates'
@@ -125,14 +125,6 @@ export function DayView() {
       </table>
     </div>
 
-{/*       <Link
-        to={`/day/${date}/add`}
-        aria-label="Add an entry"
-        className="fixed bottom-[4.9rem] right-5 z-40 flex size-14 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-[0_12px_28px_rgba(147,176,20,0.28)] md:absolute md:bottom-7 md:right-7"
-      >
-        <Plus size={27} />
-      </Link>
- */}
       <BottomNav />
 
       {/* Sheets render here, on top, with the day still visible behind. */}
