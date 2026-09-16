@@ -14,7 +14,7 @@ export function MacroCard({
   const pct = target > 0 ? Math.round((value / target) * 100) : 0
 
   return (
-    <div className="rounded-[1.2rem] border border-border bg-surface p-3.5">
+    <div className="card rounded-[1.2rem] p-3.5">
       <div className="flex items-center justify-between">
         <span className="font-[family-name:var(--font-mono)] text-[10px] uppercase tracking-[0.12em] text-foreground-muted">
           {macro.label}

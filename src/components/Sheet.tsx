@@ -110,7 +110,7 @@ export function Sheet({
       />
  
       <div
-        className="relative w-full rounded-t-[2rem] border-t border-border-strong bg-surface-raised px-5 pb-[max(1.5rem,env(safe-area-inset-bottom))] pt-1 shadow-2xl"
+        className="relative w-full rounded-t-[2rem] border-t border-border bg-surface-raised px-5 pb-[max(1.5rem,env(safe-area-inset-bottom))] pt-1 shadow-2xl"
         style={{
           transform: open ? `translateY(${translateY}px)` : 'translateY(100%)',
           transition: motion,
@@ -134,14 +134,14 @@ export function Sheet({
               <p className="font-[family-name:var(--font-mono)] text-[10px] uppercase tracking-[0.16em] text-foreground-muted">
                 {eyebrow}
               </p>
-              <h2 className="mt-1 font-[family-name:var(--font-display)] text-[27px] tracking-[-0.03em] text-foreground">
+              <h2 className="mt-1 font-[family-name:var(--font-display)] text-[27px] font-semibold tracking-[-0.03em] text-foreground">
                 {title}
               </h2>
             </div>
             <button
               onClick={dismiss}
               aria-label="Close"
-              className="rounded-full border border-border p-2 text-foreground-subtle"
+              className="rounded-full border border-border bg-surface-2 p-2 text-foreground-subtle"
             >
               <X size={18} />
             </button>

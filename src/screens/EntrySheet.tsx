@@ -122,7 +122,7 @@ export function EntrySheet() {
             <button
               key={f.id}
               onClick={() => choose(f)}
-              className="flex w-full items-center justify-between rounded-2xl border border-border bg-surface px-4 py-3 text-left active:bg-hover"
+              className="card flex w-full items-center justify-between rounded-2xl px-4 py-3 text-left active:bg-hover"
             >
               <span>
                 <span className="block text-foreground">{f.name}</span>

@@ -17,7 +17,7 @@ export function SettingsPage() {
       <p className="font-[family-name:var(--font-mono)] text-[10px] uppercase tracking-[0.14em] text-foreground-muted">
         Appearance
       </p>
-      <div className="mt-3 flex gap-1 rounded-2xl border border-border bg-surface-2 p-1">
+      <div className="mt-3 flex gap-1 rounded-2xl bg-surface-2 p-1">
         {OPTIONS.map((o) => (
           <button
             key={o.value}
