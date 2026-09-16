@@ -1,5 +1,5 @@
-import { useState } from 'react'
-import { Link, useNavigate } from 'react-router'
+import { useEffect, useRef, useState } from 'react'
+import { Link, useNavigate, useParams } from 'react-router'
 import { ChevronLeft, Plus, Search } from 'lucide-react'
 import { Sheet } from '../components/Sheet'
 import { useDateParam } from '../lib/useDataParam'
@@ -17,11 +17,35 @@ const labelClass =
 export function EntrySheet() {
   const navigate = useNavigate()
   const date = useDateParam()
+  const { entryId } = useParams<{ entryId: string }>()
+  const editingId = entryId != null && Number.isFinite(Number(entryId)) ? Number(entryId) : null
 
   const [query, setQuery] = useState('')
   const [picked, setPicked] = useState<Food | null>(null)
   const [amount, setAmount] = useState('')
   const [unit, setUnit] = useState<Unit>('g')
+  const hydrated = useRef<number | null>(null)
+
+  const existing = useLiveQuery(async () => {
+    if (editingId == null) return null
+    const entry = await db.entries.get(editingId)
+    if (!entry) return { missing: true as const }
+    const food = (await db.foods.get(entry.foodId)) ?? null
+    return { missing: false as const, entry, food }
+  }, [editingId])
+
+  useEffect(() => {
+    if (existing?.missing) navigate(`/day/${date}`, { replace: true })
+  }, [existing, date, navigate])
+
+  useEffect(() => {
+    if (!existing || existing.missing || !existing.food || existing.entry.id == null) return
+    if (hydrated.current === existing.entry.id) return
+    hydrated.current = existing.entry.id
+    setPicked(existing.food)
+    setAmount(String(existing.entry.amount))
+    setUnit(existing.entry.unit)
+  }, [existing])
 
   // Search: query `foods` by name, cap at 4. useLiveQuery, deps [query].
   // Return [] when query is blank so the list is empty on open.
@@ -73,14 +97,23 @@ export function EntrySheet() {
       date: date,
       loggedAt: Date.now(),
       foodId: foodId,
-      amount: Number(amount),
+      amount: foodAmount,
       unit: unit
     }
 
 
     db.transaction('rw', db.entries, db.foods, async () => {
-      const id = await db.entries.add(newEntry);
-      console.log('new entry added', id)
+      if (editingId != null) {
+        await db.entries.update(editingId, {
+          ...macroTotal,
+          date,
+          foodId,
+          amount: foodAmount,
+          unit,
+        })
+      } else {
+        await db.entries.add(newEntry)
+      }
       await db.foods.update(foodId, {lastUsedAt: Date.now()})
 
     }).then(() => {
@@ -99,10 +132,20 @@ export function EntrySheet() {
     });
   }
 
+  const isEdit = editingId != null
+  const eyebrow = isEdit ? 'Edit entry' : 'New entry'
+
+  if (isEdit && existing === undefined) {
+    return (
+      <Sheet eyebrow={eyebrow} title="Loading…">
+        <div className="pb-2 text-sm text-foreground-muted">Opening this entry.</div>
+      </Sheet>
+    )
+  }
 
   if (!picked) {
     return (
-      <Sheet eyebrow="New entry" title="What did you have?">
+      <Sheet eyebrow={eyebrow} title="What did you have?">
         <div className="space-y-3 pb-2">
           <div className="relative">
             <Search
@@ -142,6 +185,7 @@ export function EntrySheet() {
             </p>
           )}
 
+          {!isEdit && (
           <Link
             to={`/day/${date}/add/new`}
             className="flex w-full items-center gap-3 rounded-2xl border border-dashed border-border-strong px-4 py-3 text-foreground-subtle active:bg-hover"
@@ -149,13 +193,14 @@ export function EntrySheet() {
             <Plus size={18} />
             Create a new food
           </Link>
+          )}
         </div>
       </Sheet>
     )
   }
 
   return (
-    <Sheet eyebrow="New entry" title={picked.name}>
+    <Sheet eyebrow={eyebrow} title={picked.name}>
       <div className="space-y-4 pb-2">
         <button
           onClick={clear}
@@ -199,7 +244,7 @@ export function EntrySheet() {
           className="w-full rounded-2xl bg-primary py-4 font-semibold text-primary-foreground active:scale-[0.99] disabled:opacity-40"
           disabled={!(Number(amount) > 0)}
         >
-          Add entry
+          {isEdit ? 'Save changes' : 'Add entry'}
         </button>
       </div>
     </Sheet>

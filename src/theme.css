@@ -43,8 +43,13 @@
   --fat-fill:     #e06b45;  --fat-ink:     #9a3412;
   --fiber-fill:   #0f9f8a;  --fiber-ink:   #0f766e;
 
+  --water-fill:   #0284c7;  --water-ink:   #0369a1;
+
   --destructive:            #c2412d;
   --destructive-foreground: #ffffff;
+
+  --edit:            #e8a317;
+  --edit-foreground: #3d2a00;
 }
 
 /* ============ DARK ============ */
@@ -81,8 +86,13 @@
   --fat-fill:     #ea825a;  --fat-ink:     #ea825a;
   --fiber-fill:   #2dd4bf;  --fiber-ink:   #5eead4;
 
+  --water-fill:   #38bdf8;  --water-ink:   #7dd3fc;
+
   --destructive:            #f07163;
   --destructive-foreground: #ffffff;
+
+  --edit:            #f2c25f;
+  --edit-foreground: #3d2a00;
 }
 
 @theme inline {
@@ -113,9 +123,13 @@
   --color-carbs-fill:   var(--carbs-fill);    --color-carbs-ink:   var(--carbs-ink);
   --color-fat-fill:     var(--fat-fill);      --color-fat-ink:     var(--fat-ink);
   --color-fiber-fill:   var(--fiber-fill);    --color-fiber-ink:   var(--fiber-ink);
+  --color-water-fill:   var(--water-fill);    --color-water-ink:   var(--water-ink);
 
   --color-destructive:            var(--destructive);
   --color-destructive-foreground: var(--destructive-foreground);
+
+  --color-edit:            var(--edit);
+  --color-edit-foreground: var(--edit-foreground);
 
   --radius-sm: calc(var(--radius) - 8px);
   --radius-md: calc(var(--radius) - 4px);

@@ -1,13 +1,15 @@
-import { Outlet, useNavigate } from 'react-router'
+import { useState } from 'react'
+import { Link, Outlet, useNavigate } from 'react-router'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
 import { BottomNav } from '../components/BottomNav'
 import { AppShell } from '../components/AppShell'
 import { MacroGrid } from '../components/MacroGrid'
+import { EntryRow } from '../components/EntryRow'
 import { useDateParam } from '../lib/useDataParam'
 import { addDays, friendlyDay, isoWeek, monthDay } from '../lib/dates'
-import type { Entry, Food, Target } from '../lib/types'
+import type { Entry, Food } from '../lib/types'
 import { useLiveQuery } from 'dexie-react-hooks'
-import { db } from '../lib/db'
+import { db, getTargetForDate } from '../lib/db'
 
 export function DayView() {
   const date = useDateParam()
@@ -26,11 +28,7 @@ export function DayView() {
 
   const foodNames: Food[] = useLiveQuery(() => db.foods.toArray(), [], []) ?? []
 
-  const allTargets: Target[] = useLiveQuery(() => db.targets.toArray(), [], []) ?? []
-  const target = allTargets
-    .filter((t) => t.effectiveFrom <= date)
-    .sort((a, b) => a.effectiveFrom.localeCompare(b.effectiveFrom))
-    .at(-1)
+  const target = useLiveQuery(() => getTargetForDate(date), [date])
 
   const calTotal = Math.round(dayEntries.reduce((sum, e) => sum + e.kcal, 0))
   const proteinTotal = Math.round(dayEntries.reduce((sum, e) => sum + e.protein, 0))
@@ -39,6 +37,14 @@ export function DayView() {
   const carbTotal = Math.round(dayEntries.reduce((sum, e) => sum + e.carbs, 0))
 
   const calTarget = target?.kcal ?? 0
+  const [openId, setOpenId] = useState<number | null>(null)
+
+  const waterLogs = useLiveQuery(
+    () => db.waterLogs.where('date').equals(date).toArray(),
+    [date],
+    [],
+  )
+  const waterTotal = waterLogs.reduce((sum, log) => sum + log.ounces, 0)
 
   return (
     <AppShell>
@@ -61,7 +67,14 @@ export function DayView() {
         </div>
       </header>
 
-      <CalorieHero kcal={calTotal} target={calTarget} />
+      <div className="grid grid-cols-2 gap-2.5">
+        <CalorieHero kcal={calTotal} target={calTarget} />
+        <WaterHero
+          ounces={waterTotal}
+          target={target?.water ?? 0}
+          to={`/day/${date}/water`}
+        />
+      </div>
 
       <div className="mt-3">
         <MacroGrid
@@ -81,25 +94,27 @@ export function DayView() {
         </h2>
         <div className="space-y-2">
           {dayEntries.map((e) => (
-            <div key={e.id} className="card flex items-center justify-between rounded-[1.35rem] px-4 py-3.5">
-              <div className="min-w-0 pr-3">
-                <p className="truncate text-foreground">
-                  {foodNames.find((f) => f.id === e.foodId)?.name ?? 'Entry #' + e.id}
-                </p>
-                <p className="mt-0.5 font-[family-name:var(--font-mono)] text-[11px] text-foreground-muted">
-                  <span className="text-protein-ink">{Math.round(e.protein)}p</span>
-                  {' · '}
-                  <span className="text-carbs-ink">{Math.round(e.carbs)}c</span>
-                  {' · '}
-                  <span className="text-fat-ink">{Math.round(e.fat)}f</span>
-                  {' · '}
-                  <span className="text-fiber-ink">{Math.round(e.fiber)}fi</span>
-                </p>
-              </div>
-              <p className="shrink-0 text-sm font-semibold tabular-nums text-foreground">
-                {Math.round(e.kcal)}
-              </p>
-            </div>
+            <EntryRow
+              key={e.id}
+              entry={e}
+              foodName={foodNames.find((f) => f.id === e.foodId)?.name ?? 'Entry #' + e.id}
+              revealed={openId === e.id}
+              onReveal={() => {
+                if (e.id != null) setOpenId(e.id)
+              }}
+              onClose={() => setOpenId((id) => (id === e.id ? null : id))}
+              onEdit={() => {
+                if (e.id == null) return
+                navigate(`/day/${date}/entry/${e.id}`)
+              }}
+              onDelete={() => {
+                if (e.id == null) return
+                db.entries.delete(e.id).catch((err) => {
+                  console.error('Failed to delete entry', err)
+                })
+                setOpenId((id) => (id === e.id ? null : id))
+              }}
+            />
           ))}
 
           {dayEntries.length === 0 && (
@@ -118,39 +133,73 @@ export function DayView() {
   )
 }
 
-function CalorieHero({ kcal, target }: { kcal: number; target: number }) {
-  const size = 120
-  const r = 52
+function Ring({
+  pct,
+  strokeClass,
+  size = 72,
+}: {
+  pct: number
+  strokeClass: string
+  size?: number
+}) {
+  const r = 26
   const c = 2 * Math.PI * r
+  return (
+    <svg width={size} height={size} viewBox="0 0 72 72" className="-rotate-90" aria-hidden="true">
+      <circle cx="36" cy="36" r={r} fill="none" className="stroke-track" strokeWidth="8" />
+      <circle
+        cx="36"
+        cy="36"
+        r={r}
+        fill="none"
+        className={strokeClass}
+        strokeWidth="8"
+        strokeLinecap="round"
+        strokeDasharray={c}
+        strokeDashoffset={c * (1 - pct)}
+      />
+    </svg>
+  )
+}
+
+function CalorieHero({ kcal, target }: { kcal: number; target: number }) {
   const pct = target > 0 ? Math.min(1, kcal / target) : 0
 
   return (
-    <div className="card flex items-center gap-5 rounded-[1.65rem] p-5">
-      <svg width={size} height={size} viewBox="0 0 120 120" className="-rotate-90" aria-hidden="true">
-        <circle cx="60" cy="60" r={r} fill="none" className="stroke-track" strokeWidth="10" />
-        <circle
-          cx="60"
-          cy="60"
-          r={r}
-          fill="none"
-          className="stroke-primary"
-          strokeWidth="10"
-          strokeLinecap="round"
-          strokeDasharray={c}
-          strokeDashoffset={c * (1 - pct)}
-        />
-      </svg>
-      <div>
-        <p className="font-[family-name:var(--font-mono)] text-[10px] uppercase tracking-[0.14em] text-foreground-muted">
-          Calories
-        </p>
-        <p className="mt-1 font-[family-name:var(--font-display)] text-[40px] font-semibold leading-none tracking-[-0.04em] text-foreground">
-          {kcal}
-        </p>
-        <p className="mt-2 text-sm text-foreground-muted">
-          {target > 0 ? `of ${Math.round(target)}` : 'logged today'}
-        </p>
-      </div>
+    <div className="card flex flex-col items-start rounded-[1.65rem] p-4">
+      <Ring pct={pct} strokeClass="stroke-primary" />
+      <p className="mt-3 font-[family-name:var(--font-mono)] text-[10px] uppercase tracking-[0.14em] text-foreground-muted">
+        Calories
+      </p>
+      <p className="mt-1 font-[family-name:var(--font-display)] text-[32px] font-semibold leading-none tracking-[-0.04em] text-foreground">
+        {kcal}
+      </p>
+      <p className="mt-2 text-sm text-foreground-muted">
+        {target > 0 ? `of ${Math.round(target)}` : 'logged today'}
+      </p>
     </div>
+  )
+}
+
+function WaterHero({ ounces, target, to }: { ounces: number; target: number; to: string }) {
+  const pct = target > 0 ? Math.min(1, ounces / target) : 0
+  const shown = Number.isInteger(ounces) ? String(ounces) : ounces.toFixed(1)
+
+  return (
+    <Link
+      to={to}
+      className="card flex flex-col items-start rounded-[1.65rem] p-4 text-left active:bg-hover"
+    >
+      <Ring pct={pct} strokeClass="stroke-water-fill" />
+      <p className="mt-3 font-[family-name:var(--font-mono)] text-[10px] uppercase tracking-[0.14em] text-water-ink">
+        Water
+      </p>
+      <p className="mt-1 font-[family-name:var(--font-display)] text-[32px] font-semibold leading-none tracking-[-0.04em] text-foreground">
+        {shown}
+      </p>
+      <p className="mt-2 text-sm text-foreground-muted">
+        {target > 0 ? `of ${Math.round(target)} fl oz` : 'tap to log'}
+      </p>
+    </Link>
   )
 }
