@@ -29,6 +29,9 @@ export interface Food extends Macros {
     brand?: string;
     unitFamily: UnitFamily;
     countLabel?: string;
+    barcode?: string;
+    imageUrl?: string;
+    dataSource?: 'open-food-facts';
     lastUsedAt: number;
 }
 

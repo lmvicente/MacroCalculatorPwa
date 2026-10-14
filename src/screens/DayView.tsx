@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Link, Outlet, useNavigate } from 'react-router'
+import { Link, Outlet, useLocation, useNavigate } from 'react-router'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
 import { BottomNav } from '../components/BottomNav'
 import { AppShell } from '../components/AppShell'
@@ -14,6 +14,8 @@ import { db, getTargetForDate } from '../lib/db'
 export function DayView() {
   const date = useDateParam()
   const navigate = useNavigate()
+  const { pathname } = useLocation()
+  const foodLoggerOpen = pathname.includes('/add') || pathname.includes('/entry/')
 
   // replace: true — arrowing through a week shouldn't leave seven entries in
   // the back stack. One tap of Back should get you out, not walk you backwards
@@ -48,6 +50,7 @@ export function DayView() {
 
   return (
     <AppShell>
+      <div inert={foodLoggerOpen} aria-hidden={foodLoggerOpen}>
       <header className="mb-6 flex items-center justify-between">
         <div>
           <h1 className="font-[family-name:var(--font-display)] text-[26px] font-semibold tracking-[-0.025em] text-foreground">
@@ -126,8 +129,9 @@ export function DayView() {
       </section>
 
       <BottomNav />
+      </div>
 
-      {/* Sheets render here, on top, with the day still visible behind. */}
+      {/* Nested logging and water flows render above the day. */}
       <Outlet />
     </AppShell>
   )

@@ -22,6 +22,12 @@ export class MacroDB extends Dexie {
             targets: '++id, effectiveFrom',
             waterLogs: '++id, date, loggedAt',
         })
+        this.version(3).stores({
+            foods: '++id, name, barcode, lastUsedAt',
+            entries: '++id, foodId, loggedAt, date, [date+meal]',
+            targets: '++id, effectiveFrom',
+            waterLogs: '++id, date, loggedAt',
+        })
     }
 }
 

@@ -14,6 +14,7 @@ dist-ssr
 dev-dist
 
 .env
+scratch
 
 # Editor directories and files
 .vscode/*
